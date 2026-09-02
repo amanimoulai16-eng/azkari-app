@@ -1,8 +1,8 @@
-const CACHE_NAME = 'azkari-cache-v4';
+const CACHE_NAME = 'azkari-cache-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './azkari-icon-192.png',
+  './azkari-icon-512.png'
 ];
