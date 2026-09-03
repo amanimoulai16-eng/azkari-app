@@ -1100,7 +1100,6 @@ if ('serviceWorker' in navigator) {
 let globalAudio = null;
 let currentPlayingUrl = null;
 
-// خريطة ربط الأقسام بملفات الصوت الخاصة بك
 const AUDIO_FILES_MAP = {
   'صباح': { file: 'sabah.mp3', title: 'أذكار الصباح بصوت الشيخ مشاري العفاسي' },
   'مساء': { file: 'masaa.mp3', title: 'أذكار المساء بصوت الشيخ مشاري العفاسي' },
@@ -1117,7 +1116,6 @@ const AUDIO_FILES_MAP = {
   'أدعية': { file: 'adia-djamiaa.mp3', title: 'أدعية بصوت الشيخ مشاري العفاسي' }
 };
 
-// دالة تشغيل وإيقاف الصوت
 function playAudioTrack(fileUrl, btnElement) {
   if (globalAudio && currentPlayingUrl === fileUrl) {
     if (globalAudio.paused) {
@@ -1153,19 +1151,15 @@ function playAudioTrack(fileUrl, btnElement) {
   };
 }
 
-// دالة إنشاء وإظهار بنر الصوت تلقائياً أعلا القوائم
 function renderAudioBanner() {
-  // إزالة أي بنر صوت قديم
   const oldBanner = document.getElementById('auto-audio-banner');
   if (oldBanner) oldBanner.remove();
 
-  // تحديد القسم المفتوح حالياً
-  const activeBtn = document.querySelector('.cat-btn.active, .tab-btn.active, button.active');
-  if (!activeBtn) return;
+  // البحث عن الزر المكتوب عليه اسم القسم
+  const activeBtn = document.querySelector('.active, [class*="active"]');
+  let catText = activeBtn ? activeBtn.textContent.trim() : '';
 
-  const catText = activeBtn.textContent.trim();
   let matchedAudio = null;
-
   for (let key in AUDIO_FILES_MAP) {
     if (catText.includes(key)) {
       matchedAudio = AUDIO_FILES_MAP[key];
@@ -1173,10 +1167,15 @@ function renderAudioBanner() {
     }
   }
 
+  // إذا لم نجد قسماً محدداً بالضغط، نأخذ قسم أذكار المساء كافتراضي إذا كان ظاهراً
+  if (!matchedAudio && document.body.textContent.includes('أذكار المساء')) {
+    matchedAudio = AUDIO_FILES_MAP['مساء'];
+  }
+
   if (!matchedAudio) return;
 
-  // إيجاد الحاوية الرئيسية لعرض البنر فوق الأذكار
-  const targetContainer = document.querySelector('#azkar-list, #duas-list, .view.active') || document.body;
+  // إيجاد العنصر الرئيسي الظاهر للعيان في الصفحة
+  const targetContainer = document.querySelector('#azkar-view, #azkar-list, .view.active') || document.body;
 
   const banner = document.createElement('div');
   banner.id = 'auto-audio-banner';
@@ -1184,24 +1183,25 @@ function renderAudioBanner() {
     background: #ffffff;
     border-radius: 15px;
     padding: 12px 18px;
-    margin: 10px 15px 15px 15px;
+    margin: 10px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     direction: rtl;
+    border: 1px solid #eee;
   `;
 
   banner.innerHTML = `
     <div style="display: flex; align-items: center; gap: 10px; color: #2c3e50; font-weight: bold; font-size: 14px;">
-      <span style="color: #8e44ad;">🎵</span>
+      <span style="color: #00b894; font-size: 18px;">🎵</span>
       <span>${matchedAudio.title}</span>
     </div>
     <button class="auto-audio-btn" style="
       background: #00b894;
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       color: white;
       font-size: 18px;
@@ -1214,17 +1214,20 @@ function renderAudioBanner() {
   `;
 
   const playBtn = banner.querySelector('.auto-audio-btn');
-  playBtn.onclick = () => playAudioTrack(matchedAudio.file, playBtn);
+  playBtn.onclick = (e) => {
+    e.stopPropagation();
+    playAudioTrack(matchedAudio.file, playBtn);
+  };
 
   targetContainer.insertBefore(banner, targetContainer.firstChild);
 }
 
-// مراقبة تغيير الأقسام والضغط لتحديث بنر الصوت فوراً
+// تشغيل الفحص والتحقق عند الضغط وتحميل الصفحة
 document.addEventListener('click', () => {
-  setTimeout(renderAudioBanner, 100);
+  setTimeout(renderAudioBanner, 150);
 });
-window.addEventListener('DOMContentLoaded', renderAudioBanner);
-setTimeout(renderAudioBanner, 500);
+window.addEventListener('load', renderAudioBanner);
+setTimeout(renderAudioBanner, 300);
 </script>
 </body>
 </html>
