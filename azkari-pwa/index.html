@@ -410,6 +410,7 @@
 
   <div class="view" id="duas-view">
     <div id="dua-cat-row"></div>
+    <div id="dua-audio"></div>
     <div id="duas-list"></div>
   </div>
 
@@ -1012,9 +1013,66 @@ function renderDuaCatRow(){
     row.appendChild(btn);
   });
 }
+function renderDuaAudio(){
+
+  const audioBox = document.getElementById('dua-audio');
+
+  audioBox.innerHTML = `
+    <div class="azkar-audio-box">
+
+      <audio id="dua-player"
+             src="audio/adia-djamiaa.mp3"
+             preload="metadata"></audio>
+
+      <button class="azkar-audio-btn" id="dua-audio-btn">
+        🔊 استماع الأدعية - مشاري العفاسي
+      </button>
+
+    </div>
+  `;
+
+  const player = document.getElementById('dua-player');
+  const button = document.getElementById('dua-audio-btn');
+
+  button.onclick = () => {
+
+    if(currentAudio && currentAudio !== player){
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+
+    currentAudio = player;
+
+    if(player.paused){
+
+      player.play();
+
+      button.textContent =
+        '⏸️ إيقاف الأدعية - مشاري العفاسي';
+
+    }else{
+
+      player.pause();
+
+      button.textContent =
+        '🔊 استماع الأدعية - مشاري العفاسي';
+
+    }
+
+  };
+
+  player.onended = () => {
+
+    button.textContent =
+      '🔊 استماع الأدعية - مشاري العفاسي';
+
+  };
+
+}  
 function renderDuasList(){
   const list = document.getElementById('duas-list');
   list.innerHTML = '';
+  renderDuaAudio();
   DUAS[currentDuaCat].items.forEach(item=>{
     const card = document.createElement('div');
     card.className = 'dhikr-card';
