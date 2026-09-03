@@ -1096,6 +1096,81 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
   });
 }
+  /* ---------- AUDIO CONTROLLER ---------- */
+let globalAudio = null;
+let currentPlayingUrl = null;
+let currentActiveBtn = null;
+
+// روابط الأذكار والأدعية بصوت الشيخ مشاري العفاسي
+const AUDIO_SOURCES = {
+  'sabah.mp3': 'sabah.mp3',
+  'masaa.mp3': 'masaa.mp3',
+  'baed-al-wodoa.mp3': 'baed-al-wodoa.mp3',
+  'al-3awda-lel-manzl.mp3': 'al-3awda-lel-manzl.mp3',
+  'kabla-al-khorodj.mp3': 'kabla-al-khorodj.mp3',
+  'baed-al-azan.mp3': 'baed-al-azan.mp3',
+  'baed-al-salah.mp3': 'baed-al-salah.mp3',
+  'nawm.mp3': 'nawm.mp3',
+  'al-estiqaz.mp3': 'al-estiqaz.mp3',
+  'safar.mp3': 'safar.mp3',
+  'adia-djamiaa.mp3': 'adia-djamiaa.mp3'
+};
+
+function toggleSectionAudio(audioFile, title, btnElement) {
+  if (globalAudio && currentPlayingUrl === audioFile) {
+    if (globalAudio.paused) {
+      globalAudio.play().then(() => {
+        if(btnElement) {
+          btnElement.classList.add('playing');
+          btnElement.textContent = '⏸️';
+        }
+      }).catch(err => alert("تأكدي من وجود ملف الصوت في مجلد المشروع"));
+    } else {
+      globalAudio.pause();
+      if(btnElement) {
+        btnElement.classList.remove('playing');
+        btnElement.textContent = '🔊';
+      }
+    }
+    return;
+  }
+
+  if (globalAudio) {
+    globalAudio.pause();
+    if (currentActiveBtn) {
+      currentActiveBtn.classList.remove('playing');
+      currentActiveBtn.textContent = '🔊';
+    }
+  }
+
+  globalAudio = new Audio(audioFile);
+  currentPlayingUrl = audioFile;
+  currentActiveBtn = btnElement;
+
+  globalAudio.play().then(() => {
+    if(btnElement) {
+      btnElement.classList.add('playing');
+      btnElement.textContent = '⏸️';
+    }
+  }).catch(err => {
+    console.error("خطأ في تشغيل الصوت:", err);
+    if(btnElement) {
+      btnElement.classList.remove('playing');
+      btnElement.textContent = '🔊';
+    }
+    alert("لم يتم العثور على ملف الصوت: " + audioFile);
+  });
+
+  globalAudio.onended = () => {
+    if(btnElement) {
+      btnElement.classList.remove('playing');
+      btnElement.textContent = '🔊';
+    }
+    globalAudio = null;
+    currentPlayingUrl = null;
+    currentActiveBtn = null;
+  };
+}
 </script>
 </body>
 </html>
