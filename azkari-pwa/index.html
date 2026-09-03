@@ -137,6 +137,39 @@
     color:#fff;
   }
 
+  #azkar-section-title{
+  font-family:'Cairo';
+  font-size:20px;
+  font-weight:900;
+  color:var(--ink);
+  text-align:center;
+  margin:8px 0 10px;
+}
+
+.azkar-audio-box{
+  background:#fff;
+  border-radius:18px;
+  padding:12px 16px;
+  margin:0 0 18px;
+  box-shadow:0 4px 16px rgba(42,36,56,0.06);
+  border:2px solid rgba(0,180,170,0.15);
+}
+
+.azkar-audio-btn{
+  width:100%;
+  border:none;
+  background:transparent;
+  color:var(--turquoise-dark);
+  font-family:'Cairo';
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+  padding:4px;
+}
+
+.azkar-audio-btn:active{
+  transform:scale(0.98);
+}
   .dhikr-card{
     background:var(--card);
     border-radius: var(--radius);
@@ -369,9 +402,11 @@
 <div id="views">
 
   <div class="view active" id="azkar-view">
-    <div id="cat-row"></div>
-    <div id="azkar-list"></div>
-  </div>
+  <div id="cat-row"></div>
+  <div id="azkar-section-title"></div>
+  <div id="azkar-audio"></div>
+  <div id="azkar-list"></div>
+</div>
 
   <div class="view" id="duas-view">
     <div id="dua-cat-row"></div>
@@ -556,6 +591,20 @@ const AZKAR = {
     {text:"دُعَاءُ الرُّجُوعِ مِنَ السَّفَرِ (يُزاد على دعاء السفر):\nآيِبُونَ تَائِبُونَ عَابِدُونَ لِرَبِّنَا حَامِدُونَ", target:1},
   ]},
 };
+  const AUDIO_FILES = {
+  morning: "audio/sabah.mp3",
+  evening: "audio/masaa.mp3",
+  wudu: "audio/baed-al-wodoa.mp3",
+  entering_home: "audio/al-3awda-lel-manzl.mp3",
+  leaving_home: "audio/kabla-al-khorodj.mp3",
+  athan: "audio/baed-al-azan.mp3",
+  prayer: "audio/baed-al-salah.mp3",
+  sleep: "audio/nawm.mp3",
+  waking: "audio/al-estiqaz.mp3",
+  travel: "audio/safar.mp3"
+};
+
+const DUA_AUDIO = "audio/adia-djamiaa.mp3";
 const CAT_KEYS = Object.keys(AZKAR);
 
 /* ---------- DUAS DATA ---------- */
@@ -857,9 +906,64 @@ function getProgress(cat){
   return state.progress[todayStr][cat];
 }
 
+  let currentAudio = null;
+
+function renderAzkarAudio(){
+
+  const title = document.getElementById('azkar-section-title');
+  const audioBox = document.getElementById('azkar-audio');
+
+  const category = AZKAR[currentCat];
+  const audioFile = AUDIO_FILES[currentCat];
+
+  title.textContent = category.label;
+
+  if(!audioFile){
+    audioBox.innerHTML = '';
+    return;
+  }
+
+  audioBox.innerHTML = `
+    <div class="azkar-audio-box">
+
+      <audio id="azkar-player" src="${audioFile}" preload="metadata"></audio>
+
+      <button class="azkar-audio-btn" id="azkar-audio-btn">
+        🔊 استماع ${category.label} - مشاري العفاسي
+      </button>
+
+    </div>
+  `;
+
+  const player = document.getElementById('azkar-player');
+  const button = document.getElementById('azkar-audio-btn');
+
+  button.onclick = () => {
+
+    if(currentAudio && currentAudio !== player){
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+
+    currentAudio = player;
+
+    if(player.paused){
+      player.play();
+      button.textContent = `⏸️ إيقاف ${category.label} - مشاري العفاسي`;
+    }else{
+      player.pause();
+      button.textContent = `🔊 استماع ${category.label} - مشاري العفاسي`;
+    }
+  };
+
+  player.onended = () => {
+    button.textContent = `🔊 استماع ${category.label} - مشاري العفاسي`;
+  };
+}
 function renderAzkarList(){
   const list = document.getElementById('azkar-list');
   list.innerHTML = '';
+  renderAzkarAudio();
   const items = AZKAR[currentCat].items;
   const prog = getProgress(currentCat);
   items.forEach((item, idx)=>{
