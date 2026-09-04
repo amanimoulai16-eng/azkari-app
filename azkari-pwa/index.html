@@ -440,7 +440,7 @@
     </div>
     <div id="reminder-box">
       <h3>🔔 تذكيرات</h3>
-      <p>فعّلي الإشعارات وحددي أوقاتك، بش تجيك تذكرة كل يوم — يخدم فقط والصفحة مفتوحة فالمتصفح (تقنية المتصفح، مش تطبيق مثبت من بلاي ستور بعد).</p>
+      <p>فعل الاشعارات و حدد اوقات التذكير, لتصلك تذكيرات الاذكار يوميا في الاوقات التي تناسبك.</p>
       <div class="rem-row"><input type="checkbox" id="rem-morning-on"><label>تذكير الصباح</label><input type="time" id="rem-morning-time" value="06:30"></div>
       <div class="rem-row"><input type="checkbox" id="rem-evening-on"><label>تذكير المساء</label><input type="time" id="rem-evening-time" value="17:30"></div>
       <button id="enable-notif">تفعيل الإشعارات</button>
@@ -1203,7 +1203,7 @@ document.getElementById('enable-notif').onclick = async ()=>{
     return;
   }
   const perm = await Notification.requestPermission();
-  status.textContent = perm === 'granted' ? '✅ الإشعارات مفعّلة (خلي الصفحة مفتوحة بش تخدم)' : 'الإذن مرفوض من إعدادات المتصفح.';
+  status.textContent = perm === 'granted' ? '✅ الإشعارات مفعّلة (يرجى ابقاء الصفحة مفتوحة لتصلك التنبيهات)' : 'الاذن مرفوض من اعدادات المتصفح.';
 };
 let lastNotifMinute = '';
 setInterval(()=>{
