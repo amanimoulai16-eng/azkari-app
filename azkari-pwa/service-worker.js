@@ -1,21 +1,10 @@
 const CACHE_NAME = 'azkari-cache-v2';
-const FILE_TO_CACHE = [
+const FILES_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png',
-  './audio/sabah.mp3',
-  './audio/masaa.mp3',
-  './audio/baed-al-wodoa.mp3',
-  './audio/al-3awda-lel-manzl.mp3',
-  './audio/kabla-al-khorodj.mp3',
-  './audio/baed-al-azan.mp3',
-  './audio/baed-al-salah.mp3',
-  './audio/nawm.mp3',
-  './audio/al-estiqaz.mp3',
-  './audio/safar.mp3',
-  './audio/adia-djamiaa.mp3'
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
