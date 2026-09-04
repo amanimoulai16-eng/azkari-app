@@ -2,7 +2,7 @@
   "name": "أذكاري",
   "short_name": "أذكاري",
   "description": "تطبيق أذكار الصباح والمساء، أدعية متنوعة، سبحة إلكترونية وإحصائيات",
-  "start_url": "/index.html",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FFF8F0",
