@@ -949,12 +949,23 @@ function renderAzkarAudio(){
     currentAudio = player;
 
     if(player.paused){
-      player.play();
-      button.textContent = `⏸️ إيقاف ${category.label} - مشاري العفاسي`;
-    }else{
-      player.pause();
-      button.textContent = `🔊 استماع ${category.label} - مشاري العفاسي`;
-    }
+
+  player.play()
+    .then(() => {
+      button.textContent =
+        `⏸️ إيقاف ${category.label} - مشاري العفاسي`;
+    })
+    .catch(() => {
+      alert('للإستماع يرجى الإتصال بالإنترنت');
+    });
+
+}else{
+
+  player.pause();
+
+  button.textContent =
+    `🔊 استماع ${category.label} - مشاري العفاسي`;
+}
   };
 
   player.onended = () => {
@@ -1045,20 +1056,23 @@ function renderDuaAudio(){
 
     if(player.paused){
 
-      player.play();
-
+  player.play()
+    .then(() => {
       button.textContent =
         '⏸️ إيقاف الأدعية - مشاري العفاسي';
+    })
+    .catch(() => {
+      alert('للإستماع يرجى الإتصال بالإنترنت');
+    });
 
-    }else{
+}else{
 
-      player.pause();
+  player.pause();
 
-      button.textContent =
-        '🔊 استماع الأدعية - مشاري العفاسي';
+  button.textContent =
+    '🔊 استماع الأدعية - مشاري العفاسي';
 
-    }
-
+}
   };
 
   player.onended = () => {
