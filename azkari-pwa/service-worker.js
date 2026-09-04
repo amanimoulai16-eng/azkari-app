@@ -1,5 +1,5 @@
 const CACHE_NAME = 'azkari-cache-v2';
-const ASSETS_TO_CACHE = [
+const FILE_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
